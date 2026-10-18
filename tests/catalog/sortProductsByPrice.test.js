@@ -35,4 +35,4 @@ describe('sortProductsByPrice', () => {
 		sortProductsByPrice(newArr)
 		expect(newArr).toEqual(products)
 	});
-});
+})

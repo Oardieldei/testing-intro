@@ -29,4 +29,4 @@ describe('searchProducts', () => {
 	test("'\\t\\n' возвращает товары с ID [1, 2, 3, 4, 5, 6]", () => {
 		expect(searchProducts(products, '\t\n').map(product => product.id)).toEqual([1, 2, 3, 4, 5, 6])
 	});
-});
+})
