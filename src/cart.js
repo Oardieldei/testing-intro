@@ -34,7 +34,15 @@ function changeQuantity(oldCart, itemId, quantity) {
 
 	return cart
 }
-function removeFromCart() { return notImplemented(); }
+function removeFromCart(oldCart, itemId) {
+	const cart = [...oldCart]
+	const itemIndex = cart.findIndex(item => item.id === itemId)
+	if (itemIndex === -1) return oldCart
+
+	cart.splice(itemIndex, 1)
+
+	return cart
+}
 function calculateCartSubtotal() { return notImplemented(); }
 function calculateOrderTotal() { return notImplemented(); }
 
