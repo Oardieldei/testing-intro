@@ -43,4 +43,4 @@ describe('getAvailableProducts', () => {
   test('находит четыре доступных товара в стартовом каталоге', () => {
     expect(getAvailableProducts(products)).toHaveLength(4);
   });
-});
+})

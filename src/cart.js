@@ -1,12 +1,69 @@
 function notImplemented() {
-  throw new Error('Корзина ещё не реализована. Сначала прочитайте тесты.');
+	throw new Error('Корзина ещё не реализована. Сначала прочитайте тесты.');
 }
 
-function addToCart() { return notImplemented(); }
-function changeQuantity() { return notImplemented(); }
-function removeFromCart() { return notImplemented(); }
-function calculateCartSubtotal() { return notImplemented(); }
-function calculateOrderTotal() { return notImplemented(); }
+function addToCart(oldCart, newItem, quantity) {
+	if (quantity < 1) throw new RangeError('Маловато товара')
+	if (newItem.stock < quantity) throw new RangeError('На складе маловато')
+
+	const cart = [...oldCart]
+	if (cart.some(item => item.id === newItem.id)) {
+		const itemIndex = cart.findIndex(item => item.id === newItem.id)
+
+		if (newItem.stock < quantity + cart[itemIndex].quantity) throw new RangeError('На складе маловато')
+
+		cart[itemIndex] = { ...newItem, quantity: quantity + cart[itemIndex].quantity }
+	} else {
+		cart.push({ ...newItem, quantity: quantity })
+		cart[cart.length - 1].quantity = quantity
+	}
+
+	return cart
+}
+function changeQuantity(oldCart, itemId, quantity) {
+	const cart = [...oldCart]
+	if (!cart.some(item => item.id === itemId)) return oldCart
+	if (quantity < 1) throw new RangeError('Маловато товара')
+
+	const itemIndex = cart.findIndex(item => item.id === itemId)
+
+	if (cart[itemIndex].stock < quantity) throw new RangeError('На складе маловато товара')
+
+	cart[itemIndex] = { ...cart[itemIndex] }
+	cart[itemIndex].quantity = quantity
+
+	return cart
+}
+function removeFromCart(oldCart, itemId) {
+	const cart = [...oldCart]
+	const itemIndex = cart.findIndex(item => item.id === itemId)
+	if (itemIndex === -1) return oldCart
+
+	cart.splice(itemIndex, 1)
+
+	return cart
+}
+function calculateCartSubtotal(cart) {
+	let sum = 0
+	if (cart.length === 0) return sum
+	cart.forEach(product => {
+		sum += product.price * product.quantity
+	})
+
+	return sum
+}
+function calculateOrderTotal(productArray, code) {
+	const subtotal = calculateCartSubtotal(productArray)
+	const discount = code !== 'SAVE10' ? 0 : subtotal < 20000 ? 0 : subtotal / 10
+	const delivery = subtotal < 50000 ? 30000 : 0
+	const total = subtotal + delivery - discount
+	return {
+		subtotal,
+		discount,
+		delivery,
+		total
+	}
+}
 
 const cartApi = { addToCart, changeQuantity, removeFromCart, calculateCartSubtotal, calculateOrderTotal };
 
